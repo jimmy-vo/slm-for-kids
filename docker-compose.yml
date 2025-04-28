@@ -1,6 +1,6 @@
 services:
   slm:
-    image: ${SLM_IMAGE:-slm-service-img}
+    image: ${slm-service-img}
     container_name: slm-cnr
     build: 
       dockerfile: ./Dockerfile
@@ -41,6 +41,8 @@ services:
     extra_hosts:
       - host.docker.internal:host-gateway
     restart: unless-stopped
+    networks:
+      - slmfk-network
 
 volumes:
   open-webui: {}
