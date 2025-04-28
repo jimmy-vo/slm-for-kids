@@ -1,6 +1,6 @@
 services:
   slm:
-    image: ${slm-service-img}
+    image: slm-service-img
     container_name: slm-cnr
     build: 
       dockerfile: ./Dockerfile
