@@ -1,0 +1,49 @@
+services:
+  slm:
+    image: ${SLM_IMAGE:-slm-service-img}
+    container_name: slm-cnr
+    build: 
+      dockerfile: ./Dockerfile
+      context: ./services/slm-api
+      args:
+        - BUILDKIT_INLINE_CACHE=1
+    environment:
+      - OLLAMA_NUM_PARALLEL=4
+      - OLLAMA_MAX_LOADED_MODELS=1
+      - OLLAMA_MODELS=/usr/share/ollama/.ollama/models
+      - GIN_MODE=release
+      - SLM_MODEL=${SLM_MODEL:-}
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+    volumes:
+      - /tmp/slmfk/slm:/usr/share/ollama/.ollama/models
+    ports:
+      - target: 11434
+        published: 8087
+    networks:
+      - slmfk-network
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    volumes:
+      - open-webui:/app/backend/data
+    depends_on:
+      - slm
+    ports:
+      - 3000:8080
+    environment:
+      - 'OLLAMA_BASE_URL=http://slm:11434'
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    restart: unless-stopped
+
+volumes:
+  open-webui: {}
+networks:
+  slmfk-network:
+    

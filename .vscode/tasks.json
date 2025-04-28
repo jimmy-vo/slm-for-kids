@@ -1,0 +1,27 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "CONTAINER: close all and clean",
+            "detail": "spin up all services",
+            "type": "shell",
+            "group": "build",
+            "dependsOn": "CONTAINER: close all",
+            "command": "docker system prune -a --volumes -f"
+        },
+        {
+            "label": "CONTAINER: close all",
+            "detail": "docker-compose: down",
+            "type": "shell",
+            "group": "build",
+            "command": "docker-compose down"
+        },
+        {
+            "label": "CONTAINER: spin up all",
+            "detail": "spin up all services",
+            "type": "shell",
+            "group": "build",
+            "command": "docker compose up --build -d"
+        },
+    ]
+}
